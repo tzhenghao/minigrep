@@ -20,5 +20,11 @@ fn main() {
 }
 
 fn parse_config(args: &[String]) -> Config {
-    Config { query: args[1].clone(), file_path: args[2].clone() }
+    if args.len() < 3 {
+        panic!("Not enough arguments!");
+    }
+    Config {
+        query: args[1].clone(),
+        file_path: args[2].clone(),
+    }
 }
