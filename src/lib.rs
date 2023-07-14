@@ -1,9 +1,11 @@
+use std::env;
 use std::error::Error;
 use std::fs;
 
 pub struct Config {
     pub query: String,
     pub file_path: String,
+    pub ignore_case: bool,
 }
 
 impl Config {
@@ -11,9 +13,12 @@ impl Config {
         if args.len() < 3 {
             return Err("Not enough arguments!");
         }
+
+        let ignore_case = env::var("IGNORE_CASE").is_ok();
         Ok(Config {
             query: args[1].clone(),
             file_path: args[2].clone(),
+            ignore_case,
         })
     }
 }
@@ -21,7 +26,13 @@ impl Config {
 pub fn run(config: Config) -> Result<(), Box<dyn Error>> {
     let file_contents = fs::read_to_string(config.file_path)?;
 
-    for line in search(&config.query, &file_contents) {
+    let results = if config.ignore_case {
+        search_case_insensitive(&config.query, &file_contents)
+    } else {
+        search(&config.query, &file_contents)
+    };
+
+    for line in results {
         println!("{line}");
     }
 
