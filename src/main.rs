@@ -1,4 +1,5 @@
 use std::env;
+use std::error::Error;
 use std::fs;
 use std::process;
 
@@ -19,11 +20,12 @@ impl Config {
     }
 }
 
-fn run(config: Config) {
-    let file_read_error_msg = "Should be able to read the file";
-    let file_contents = fs::read_to_string(config.file_path).expect(file_read_error_msg);
+fn run(config: Config) -> Result<(), Box<dyn Error>> {
+    let file_contents = fs::read_to_string(config.file_path)?;
 
     println!("With text:\n{file_contents}");
+
+    Ok(())
 }
 
 fn main() {
