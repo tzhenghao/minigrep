@@ -18,6 +18,14 @@ impl Config {
         })
     }
 }
+
+fn run(config: Config) {
+    let file_read_error_msg = "Should be able to read the file";
+    let file_contents = fs::read_to_string(config.file_path).expect(file_read_error_msg);
+
+    println!("With text:\n{file_contents}");
+}
+
 fn main() {
     let args: Vec<String> = env::args().collect();
 
@@ -29,8 +37,5 @@ fn main() {
     print!("Searching for {}", config.query);
     println!(", in file: {}", config.file_path);
 
-    let file_read_error_msg = "Should be able to read the file";
-    let file_contents = fs::read_to_string(config.file_path).expect(file_read_error_msg);
-
-    println!("With text:\n{file_contents}");
+    run(config);
 }
